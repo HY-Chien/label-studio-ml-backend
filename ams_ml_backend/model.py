@@ -14,7 +14,31 @@ class NewModel(LabelStudioMLBase):
     def setup(self):
         """Configure any parameters of your model here"""
         self.set("model_version", "0.0.1")
-        self.model = YOLO("/home/S113065528/Yulon-AIAMS-label-studio/checkpoints/icons=Cv4_ds=20k(8,1,1)_epoch=60_yolo12m/weights/best.pt")
+
+        # --- 以下是使用 os.path 的傳統作法 ---
+        # 1. 取得目前腳本的絕對路徑，再取得其所在的目錄
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # 2. 使用 os.path.join 安全地組合路徑的各個部分
+        #    這會自動處理 Windows 和 Linux/macOS 的路徑分隔符
+        weights_path = os.path.join(
+            script_dir, 
+            '..', 
+            '..', 
+            'yulon_label_studio', 
+            'checkpoints', 
+            'icons=Cv4_ds=20k(8,1,1)_epoch=60_yolo12m', 
+            'weights', 
+            'best.pt'
+        )
+        
+        # 3. (可選但建議) 將路徑正規化，解析 '..' 並使其更簡潔
+        weights_path = os.path.normpath(weights_path)
+        
+        # 使用建構好的路徑變數來載入模型
+        self.model = YOLO(weights_path)
+        # --- 修改結束 ---
+        
         print(f"[INFO] Model classes: {self.model.names}")
 
     def predict(self, tasks: List[Dict], context: Optional[Dict] = None, **kwargs) -> ModelResponse:
