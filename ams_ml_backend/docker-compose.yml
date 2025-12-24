@@ -12,6 +12,7 @@ services:
     env_file:
       - ../../../.env 
     environment:
+      LABEL_STUDIO_URL: http://host.docker.internal:8080
       LOG_LEVEL: DEBUG
       WORKERS: "1"
       THREADS: "8"
